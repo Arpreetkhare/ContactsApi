@@ -4,43 +4,51 @@ from rest_framework.generics import GenericAPIView
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from rest_framework.decorators import api_view
-
-
-from .serializers import UserSerializer
 from rest_framework.response import Response
-# from django.http import HttpResponse
-
-
 from rest_framework import status
-
-
 import jwt
-
 from contactsapi import base
-# from .backends import JWTAuthentication
+from .serializers import UserSerializer
 
 # Create your views here.
 
-
 class RegisterView(GenericAPIView):
-    serializer_class=UserSerializer
+    """
+    View for registering a new user.
+    """
+    serializer_class = UserSerializer
 
+    def post(self, request):
+        """
+        Handle POST request for user registration.
 
-    def post(self,request):
-        serializer=UserSerializer(data=request.data)
+        Validates and saves the new user data using the UserSerializer.
+        Returns a success response with user data on successful creation,
+        or an error response if validation fails.
+        """
+        serializer = UserSerializer(data=request.data)
 
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data,status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-    
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-class Loginview(GenericAPIView):
+class LoginView(GenericAPIView):
+    """
+    View for user login and JWT token generation.
+    """
     
     def post(self, request):
+        """
+        Handle POST request for user login.
+
+        Authenticates the user based on provided username and password.
+        On successful authentication, generates a JWT token and returns
+        the user data along with the token. Handles token generation errors
+        and returns appropriate error responses.
+        """
         data = request.data
         username = data.get('username', '')
         password = data.get('password', '')
@@ -72,6 +80,7 @@ class Loginview(GenericAPIView):
             except jwt.ExpiredSignatureError:
                 return Response({'detail': 'Token has expired.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             except Exception as e:
+                # Log the exception for debugging
                 print(e)
                 return Response({'detail': 'Server error.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -80,9 +89,15 @@ class Loginview(GenericAPIView):
     
 
 @api_view(['GET'])
-def users(request) :
-    all_user=User.objects.all() 
+def users(request):
+    """
+    Retrieve a list of all users.
 
-    serializer=UserSerializer(all_user,many=True)  
+    Handles GET requests and returns a list of all users serialized
+    using the UserSerializer.
+    """
+    all_user = User.objects.all() 
+
+    serializer = UserSerializer(all_user, many=True)  
 
     return Response(serializer.data)
