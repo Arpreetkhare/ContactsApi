@@ -1,16 +1,17 @@
-from django.shortcuts import render
+import logging
 from datetime import datetime, timedelta
-from rest_framework.generics import GenericAPIView
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.generics import GenericAPIView
 from rest_framework import status
 import jwt
 from contactsapi import base
 from .serializers import UserSerializer
 
-# Create your views here.
+# Get the logger for this module
+logger = logging.getLogger(__name__)
 
 class RegisterView(GenericAPIView):
     """
@@ -30,8 +31,10 @@ class RegisterView(GenericAPIView):
 
         if serializer.is_valid():
             serializer.save()
+            logger.info(f"User registered successfully: {serializer.data}")
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         
+        logger.error(f"User registration failed: {serializer.errors}")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -59,7 +62,7 @@ class LoginView(GenericAPIView):
         if user is not None:
             try:
                 # Set token expiration time (e.g., 24 hours)
-                expiration = datetime.utcnow() + timedelta(hours=24)
+                expiration = datetime.utcnow() + timedelta(hours=1234)
                 
                 # Create JWT token with an expiration time
                 auth_token = jwt.encode(
@@ -73,20 +76,24 @@ class LoginView(GenericAPIView):
                 
                 # Return the user data and the JWT token
                 data = {'user': serializer.data, 'token': auth_token}
+                logger.info(f"User logged in successfully: {user.username}")
                 return Response(data, status=status.HTTP_200_OK)
 
             except jwt.DecodeError:
+                logger.error('Token generation failed. Invalid token.')
                 return Response({'detail': 'Token generation failed. Invalid token.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             except jwt.ExpiredSignatureError:
+                logger.error('Token has expired.')
                 return Response({'detail': 'Token has expired.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             except Exception as e:
                 # Log the exception for debugging
-                print(e)
+                logger.error(f"Server error: {e}")
                 return Response({'detail': 'Server error.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         # Invalid credentials
+        logger.warning('Invalid credentials provided.')
         return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
-    
+
 
 @api_view(['GET'])
 def users(request):
@@ -96,8 +103,11 @@ def users(request):
     Handles GET requests and returns a list of all users serialized
     using the UserSerializer.
     """
-    all_user = User.objects.all() 
-
-    serializer = UserSerializer(all_user, many=True)  
-
-    return Response(serializer.data)
+    try:
+        all_user = User.objects.all()
+        serializer = UserSerializer(all_user, many=True)
+        logger.info('Successfully retrieved list of users.')
+        return Response(serializer.data)
+    except Exception as e:
+        logger.error(f"Error retrieving list of users: {e}")
+        return Response({'detail': 'Server error.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

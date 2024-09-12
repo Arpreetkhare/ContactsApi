@@ -1,5 +1,9 @@
+import logging
 from rest_framework import serializers
 from django.contrib.auth.models import User
+
+# Get the logger for this module
+logger = logging.getLogger(__name__)
 
 class UserSerializer(serializers.ModelSerializer):
     """
@@ -37,16 +41,10 @@ class UserSerializer(serializers.ModelSerializer):
 
         # Ensure email uniqueness (case-insensitive)
         if User.objects.filter(email__iexact=email).exists():
-            ''' "WHY EMAIL_IEXACT WHY NOT EMAIL !! "
-            If email is example@example.com, 
-            the query will match EXAMPLE@EXAMPLE.COM, Example@Example.Com, etc., 
-            as well as example@example.com.
-T           his is useful for cases where you want to ensure that 
-            email addresses are unique without regard to case differences. it will
-            go for same looking email.
-            '''
+            logger.warning(f"Validation failed: Email already exists - {email}")
             raise serializers.ValidationError({'email': 'Email already exists!'})
 
+        logger.info(f"Validation passed for email: {email}")
         return super().validate(attrs)
 
     def create(self, validated_data):
@@ -67,10 +65,13 @@ T           his is useful for cases where you want to ensure that
         password = validated_data.pop('password')
         
         # Create a new user with the provided data
-        user = User.objects.create_user(**validated_data)
-        
-        # Set the password (hashed)
-        user.set_password(password)
-        user.save()
-        
-        return user
+        try:
+            user = User.objects.create_user(**validated_data)
+            # Set the password (hashed)
+            user.set_password(password)
+            user.save()
+            logger.info(f"User created successfully: {user.username}")
+            return user
+        except Exception as e:
+            logger.error(f"Error creating user: {e}")
+            raise serializers.ValidationError({'detail': 'Error creating user.'})

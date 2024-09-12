@@ -1,3 +1,4 @@
+import logging
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from django.contrib.auth.models import User
@@ -5,6 +6,8 @@ from .models import Message
 from .serializers import MessageSerializer
 from shared_file.backends import JWTAuthentication
 
+# Get the logger for this module
+logger = logging.getLogger(__name__)
 
 class SendMessageView(generics.CreateAPIView):
     """
@@ -28,23 +31,29 @@ class SendMessageView(generics.CreateAPIView):
         """
         try:
             sender = self.request.user  # Set the sender as the authenticated user
-            
+            logger.info(f"Sender: {sender}")
+
             # Retrieve the receiver by the ID provided in the request data
             receiver = User.objects.get(id=self.request.data['receiver'])
+            logger.info(f"Receiver: {receiver}")
 
             # Save the message, linking the sender and receiver
             serializer.save(sender=sender, receiver=receiver)
+            logger.info("Message created successfully.")
         
         except User.DoesNotExist:
             # If the receiver ID doesn't match any existing user, return a 404 error
+            logger.error("Receiver not found.")
             return Response({"error": "Receiver not found."}, status=status.HTTP_404_NOT_FOUND)
         
         except KeyError:
             # If receiver ID is not provided in the request, return a 400 error
+            logger.error("Receiver ID is required.")
             return Response({"error": "Receiver ID is required."}, status=status.HTTP_400_BAD_REQUEST)
         
         except Exception as e:
             # Handle any other unexpected errors
+            logger.error(f"An unexpected error occurred: {str(e)}")
             return Response({"error": f"An unexpected error occurred: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
@@ -68,10 +77,14 @@ class ReceivedMessagesView(generics.ListAPIView):
         try:
             # Get the currently authenticated user
             user = self.request.user
-            
+            logger.info(f"Fetching messages for user: {user}")
+
             # Filter the Message objects where the current user is the receiver
-            return Message.objects.filter(receiver=user)
+            queryset = Message.objects.filter(receiver=user)
+            logger.info(f"Found {queryset.count()} messages.")
+            return queryset
 
         except Exception as e:
             # Handle any unexpected errors during the query
+            logger.error(f"An unexpected error occurred: {str(e)}")
             return Response({"error": f"An unexpected error occurred: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
