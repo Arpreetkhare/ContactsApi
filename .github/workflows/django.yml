@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      JWT_SECRET_KEY: ${{afafgefauhfauhauadhahjhabahbahhahfabhjfabfa}}  # Replace with your actual secret
+      JWT_SECRET_KEY: ${{secrets.JWT_SECRET_KEY }}  # Replace with your actual secret
 
     steps:
     - uses: actions/checkout@v4
