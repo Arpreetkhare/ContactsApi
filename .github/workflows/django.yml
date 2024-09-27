@@ -11,6 +11,9 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+      JWT_SECRET_KEY: ${{afafgefauhfauhauadhahjhabahbahhahfabhjfabfa}}  # Replace with your actual secret
+
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python 3.12
