@@ -13,6 +13,10 @@ from .serializers import UserSerializer
 # Get the logger for this module
 logger = logging.getLogger(__name__)
 
+
+def home():
+    return "hello!! you are in "
+
 class RegisterView(GenericAPIView):
     """
     View for registering a new user.
