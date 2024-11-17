@@ -70,17 +70,54 @@
       ```bash
       python manage.py runserver
 ### Installation with Docker
-1. **Build the Docker image:**   
-   ```bash
-   docker build -t contactapi
-
-2. **Run the Docker container:**
-   ```bash
-   docker run -d -p 8000:8000 --name contactapi contactapi
+   1. **Build the Docker image:**   
+      ```bash
+      docker build -t contactapi
+   
+   2. **Run the Docker container:**
+      ```bash
+      docker run -d -p 8000:8000 --name contactapi contactapi
 
 ### Installation with Launch Script
-1.**Make the scripts executable:**
-   ```bash
-   chmod +x config.sh
-   chmod +x launch.sh
+   1.**Make the scripts executable:**
+      
+      chmod +x config.sh
+      chmod +x launch.sh
+
+
+   2.Create Docker Network:**
+         
+         ./launch.sh create-network
+         
+   3.**Start MySQL Container:**
+         
+         ./launch.sh start-mysql
+
+   4.**Start ContactAPI Container:**
+         
+         ./launch.sh start-contactapi
+
+   5.**Stop MySQL Container:**
+         
+         ./launch.sh stop-mysql
+
+   6.**Stop ContactAPI Container:**
+         
+         ./launch.sh stop-contactapi
+
+   7.**View Status:**
+         
+         ./launch.sh status
+
+   8.**Remove Docker Network:**
+         ~~~bash
+         ./launch.sh remove-network
+
+
+   
+
+   
+
+
+   
 
