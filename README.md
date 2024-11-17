@@ -84,37 +84,3 @@
    chmod +x config.sh
    chmod +x launch.sh
 
-2.**Commands:**
-      .**Create Docker Network:**
-         ~~~bash
-         ./launch.sh create-network
-      .**Start MySQL Container:**
-         ~~~bash
-         ./launch.sh start-mysql
-
-      .**Start ContactAPI Container:**
-         ~~~bash
-         ./launch.sh start-contactapi
-
-      .**Stop MySQL Container:**
-         ~~~bash
-         ./launch.sh stop-mysql
-
-      . **Stop ContactAPI Container:**
-         ~~~bash
-         ./launch.sh stop-contactapi
-
-      . **View Status:**
-         ~~~bash
-         ./launch.sh status
-
-      .**Remove Docker Network:**
-         ~~~bash
-         ./launch.sh remove-network
-
-
-   
-
-   
-
-
