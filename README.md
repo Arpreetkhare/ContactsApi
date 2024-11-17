@@ -3,13 +3,16 @@
 ## Overview
 **ContactAPI** is a Django REST Framework (DRF) application for managing and sharing contacts. This API allows users to manage their contacts, send messages, and securely share contact information with authenticated users. The application integrates JWT-based authentication and uses MySQL as the database, providing a secure and scalable solution.
 
+---
+
 ## Features
 - **User Authentication:** Register users with JWT-based authentication. Use the token for secure operations.
 - **Contact Management:** CRUD operations to add, update, retrieve, and delete contacts.
 - **Sharing Contacts:** Share specific contacts with other authenticated users.
 - **Messaging:** Send and receive messages between users.
-- **Role-Based Access Control:** Admin users can manage contacts, while regular users can only view and modify their own contacts.
-- **Secure Authentication:** JWT tokens for secure login and role validation.
+- **Role-Based Access Control:** Admin users can manage contacts, while regular users can only view and modify their own 
+
+---
 
 ## Tech Stack
 - **Backend:** Python, Django, Django REST Framework (DRF)
@@ -50,29 +53,68 @@
 | GET        | `/api/msg/received-msg/`   | Get received messages          |
 
 ## Installation
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/yourusername/contactapi.git
-   cd contactapi
-2. **Set up a virtual environment:**
-   ```bash
-   python3 -m venv env
-   source env/bin/activate
-
-3. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-4. **Run the application:**
-   ```bash
-   python manage.py runserver
-
-5. **Build the Docker image:**   
+### Installation without Docker
+   1. **Clone the repository:**
+      ```bash
+      git clone https://github.com/yourusername/contactapi.git
+      cd contactapi
+   2. **Set up a virtual environment:**
+      ```bash
+      python3 -m venv env
+      source env/bin/activate
+   
+   3. **Install dependencies:**
+      ```bash
+      pip install -r requirements.txt
+   4. **Run the application:**
+      ```bash
+      python manage.py runserver
+### Installation with Docker
+1. **Build the Docker image:**   
    ```bash
    docker build -t contactapi
 
-6. **Run the Docker container:**
+2. **Run the Docker container:**
    ```bash
    docker run -d -p 8000:8000 --name contactapi contactapi
+
+### Installation with Launch Script
+1.**Make the scripts executable:**
+   ```bash
+   chmod +x config.sh
+   chmod +x launch.sh
+
+2.**Commands:**
+      .**Create Docker Network:**
+         ~~~bash
+         ./launch.sh create-network
+      .**Start MySQL Container:**
+         ~~~bash
+         ./launch.sh start-mysql
+
+      .**Start ContactAPI Container:**
+         ~~~bash
+         ./launch.sh start-contactapi
+
+      .**Stop MySQL Container:**
+         ~~~bash
+         ./launch.sh stop-mysql
+
+      . **Stop ContactAPI Container:**
+         ~~~bash
+         ./launch.sh stop-contactapi
+
+      . **View Status:**
+         ~~~bash
+         ./launch.sh status
+
+      .**Remove Docker Network:**
+         ~~~bash
+         ./launch.sh remove-network
+
+
    
+
+   
+
 
