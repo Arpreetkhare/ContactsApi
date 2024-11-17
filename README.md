@@ -79,37 +79,37 @@
       docker run -d -p 8000:8000 --name contactapi contactapi
 
 ### Installation with Launch Script
-   1.**Make the scripts executable:**
+   1. **Make the scripts executable:**
       
       chmod +x config.sh
       chmod +x launch.sh
 
 
-   2.Create Docker Network:**
+   2. **Create Docker Network:**
          
          ./launch.sh create-network
          
-   3.**Start MySQL Container:**
+   3. **Start MySQL Container:**
          
          ./launch.sh start-mysql
 
-   4.**Start ContactAPI Container:**
+   4. **Start ContactAPI Container:**
          
          ./launch.sh start-contactapi
 
-   5.**Stop MySQL Container:**
+   5. **Stop MySQL Container:**
          
          ./launch.sh stop-mysql
 
-   6.**Stop ContactAPI Container:**
+   6. **Stop ContactAPI Container:**
          
          ./launch.sh stop-contactapi
 
-   7.**View Status:**
+   7. **View Status:**
          
          ./launch.sh status
 
-   8.**Remove Docker Network:**
+   8. **Remove Docker Network:**
          
          ./launch.sh remove-network
 
