@@ -80,37 +80,37 @@
 
 ### Installation with Launch Script
    1. **Make the scripts executable:**
-      
+      ```bash
       chmod +x config.sh
       chmod +x launch.sh
 
 
    2. **Create Docker Network:**
-         
+         ```bash
          ./launch.sh create-network
          
    3. **Start MySQL Container:**
-         
+         ```bash
          ./launch.sh start-mysql
 
    4. **Start ContactAPI Container:**
-         
+         ```bash
          ./launch.sh start-contactapi
 
    5. **Stop MySQL Container:**
-         
+         ```bash
          ./launch.sh stop-mysql
 
    6. **Stop ContactAPI Container:**
-         
+         ```bash
          ./launch.sh stop-contactapi
 
    7. **View Status:**
-         
+         ```bash
          ./launch.sh status
 
    8. **Remove Docker Network:**
-         
+         ```bash
          ./launch.sh remove-network
 
 
