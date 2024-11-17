@@ -56,7 +56,7 @@
 ### Installation without Docker
    1. **Clone the repository:**
       ```bash
-      git clone https://github.com/yourusername/contactapi.git
+      git clone https://github.com/Arpreetkhare/contactapi.git
       cd contactapi
    2. **Set up a virtual environment:**
       ```bash
